@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Simple React to-do list app!</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <script crossorigin src="https://unpkg.com/react@16/umd/react.development.js"></script>
+  <script crossorigin src="https://unpkg.com/react-dom@16/umd/react-dom.development.js"></script>
+
+  <script src="https://unpkg.com/babel-standalone@6.15.0/babel.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/normalize/8.0.1/normalize.min.css">
+  <link rel="stylesheet" href="styles.css">
+</head>
+
+<body>
+  <div id="container"></div>
+  <script type="text/babel">
+    class SimpleCounter extends React.Component {
+      constructor(props) {
+        super(props);
+
+        this.state = {
+          count: 0
+        };
+
+        console.log("___1___ Constructor!");
+      }
+
+      componentDidMount() {
+        this.timer = setInterval(
+          (this.timerTick = () => {
+            this.setState(prevState => {
+              return {
+                count: prevState.count + 1
+              };
+            });
+          }),
+          100
+        );
+
+        console.log("___3___ Component has mounted!");
+      }
+
+      componentDidUpdate(prevProps, prevState) {
+        console.log("___4___ Component updated from: " + prevState.count);
+
+        if (this.state.count == 50) {
+          ReactDOM.unmountComponentAtNode(document.querySelector("#container"));
+        }
+      }
+
+      componentWillUnmount() {
+        console.log("Component is about to be unmounted!");
+        clearInterval(this.timer);
+        ReactDOM.render(
+          <div>
+            <FeedbackText />
+          </div>,
+          document.querySelector("#container")
+        );
+      }
+
+      render() {
+        console.log("___2___ SimpleCounter render call!");
+
+        return <h1>{this.state.count}</h1>;
+      }
+    }
+
+    const FeedbackText = () => {
+      return <p>SimpleCounter component has been removed!</p>;
+    };
+
+    ReactDOM.render(
+      <div>
+        <SimpleCounter />
+      </div>,
+      document.querySelector("#container")
+    );
+
+  </script>
+</body>
+
+</html>
